@@ -1,11 +1,17 @@
 [package]
-name = "krilla_test"
-version = "0.0.1"
+name = "pdf-bake-off"
+version = "0.1.0"
 edition = "2021"
+
+[[bin]]
+name = "compare"
+path = "src/main.rs"
 
 [dependencies]
 krilla = "0.7"
 krilla-svg = "0.7"
+svg2pdf = "0.13"
+pdf-writer = "0.14"
+printpdf = { version = "0.9", features = ["svg"] }
 usvg = "0.45"
 fontdb = "0.23"
-walkdir = "2"
