@@ -20,9 +20,17 @@ fn main() {
     println!("input: {}", input.display());
     println!("out:   {}\n", out_dir.display());
 
+    let fontdb_empty = Arc::new(Database::new());
+    let fontdb_small = build_fontdb_minimal();
+
     let mut rows: Vec<Row> = Vec::new();
-    rows.push(run("krilla", || bake_krilla(&input, &out_dir, &fontdb)));
-    rows.push(run("svg2pdf", || bake_svg2pdf(&input, &out_dir, &fontdb)));
+    rows.push(run("krilla all/fs4", || bake_krilla(&input, &out_dir, &fontdb, "all_fs4", 4.0)));
+    rows.push(run("krilla small/fs4", || bake_krilla(&input, &out_dir, &fontdb_small, "small_fs4", 4.0)));
+    rows.push(run("krilla empty/fs4", || bake_krilla(&input, &out_dir, &fontdb_empty, "empty_fs4", 4.0)));
+    rows.push(run("krilla small/fs2", || bake_krilla(&input, &out_dir, &fontdb_small, "small_fs2", 2.0)));
+    rows.push(run("krilla small/fs1", || bake_krilla(&input, &out_dir, &fontdb_small, "small_fs1", 1.0)));
+    rows.push(run("svg2pdf (all fonts)", || bake_svg2pdf(&input, &out_dir, &fontdb, "all")));
+    rows.push(run("svg2pdf (empty db)", || bake_svg2pdf(&input, &out_dir, &fontdb_empty, "empty")));
     rows.push(run("printpdf-0.9", || bake_printpdf(&input, &out_dir)));
     rows.push(run("rsvg-convert", || bake_rsvg(&input, &out_dir)));
     rows.push(run("marp", || bake_marp(&input, &out_dir)));
@@ -66,12 +74,35 @@ fn build_fontdb() -> Arc<Database> {
     Arc::new(db)
 }
 
+/// Load only one sans + one mono font from a known path — a proxy for what
+/// rsslide would actually need (Arial / Courier New stacks).
+fn build_fontdb_minimal() -> Arc<Database> {
+    let mut db = Database::new();
+    for path in [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+    ] {
+        db.load_font_file(path)
+            .unwrap_or_else(|_| panic!("missing font: {path}"));
+    }
+    db.set_sans_serif_family("DejaVu Sans");
+    db.set_monospace_family("DejaVu Sans Mono");
+    db.set_serif_family("DejaVu Sans");
+    Arc::new(db)
+}
+
 fn stem(path: &Path) -> String {
     path.file_stem().unwrap().to_string_lossy().into_owned()
 }
 
 // ── krilla ────────────────────────────────────────────────────────────────
-fn bake_krilla(input: &Path, out_dir: &Path, fontdb: &Arc<Database>) -> Result<PathBuf, String> {
+fn bake_krilla(
+    input: &Path,
+    out_dir: &Path,
+    fontdb: &Arc<Database>,
+    variant: &str,
+    filter_scale: f32,
+) -> Result<PathBuf, String> {
     use krilla::Document;
     use krilla::geom::Size;
     use krilla::page::PageSettings;
@@ -80,6 +111,7 @@ fn bake_krilla(input: &Path, out_dir: &Path, fontdb: &Arc<Database>) -> Result<P
     let data = std::fs::read(input).map_err(|e| e.to_string())?;
     let opts = usvg::Options {
         fontdb: fontdb.clone(),
+        font_family: "sans-serif".into(),
         ..Default::default()
     };
     let tree = usvg::Tree::from_data(&data, &opts).map_err(|e| e.to_string())?;
@@ -89,30 +121,40 @@ fn bake_krilla(input: &Path, out_dir: &Path, fontdb: &Arc<Database>) -> Result<P
     let mut doc = Document::new();
     let mut page = doc.start_page_with(PageSettings::new(size));
     let mut surface = page.surface();
+    let settings = SvgSettings {
+        filter_scale,
+        ..SvgSettings::default()
+    };
     surface
-        .draw_svg(&tree, size, SvgSettings::default())
+        .draw_svg(&tree, size, settings)
         .ok_or_else(|| "draw_svg returned None".to_string())?;
     surface.finish();
     page.finish();
 
     let pdf = doc.finish().map_err(|e| format!("{e:?}"))?;
-    let out = out_dir.join(format!("{}__krilla.pdf", stem(input)));
+    let out = out_dir.join(format!("{}__krilla_{variant}.pdf", stem(input)));
     std::fs::write(&out, pdf).map_err(|e| e.to_string())?;
     Ok(out)
 }
 
 // ── svg2pdf ───────────────────────────────────────────────────────────────
-fn bake_svg2pdf(input: &Path, out_dir: &Path, fontdb: &Arc<Database>) -> Result<PathBuf, String> {
+fn bake_svg2pdf(
+    input: &Path,
+    out_dir: &Path,
+    fontdb: &Arc<Database>,
+    variant: &str,
+) -> Result<PathBuf, String> {
     let data = std::fs::read(input).map_err(|e| e.to_string())?;
     let opts = usvg::Options {
         fontdb: fontdb.clone(),
+        font_family: "sans-serif".into(),
         ..Default::default()
     };
     let tree = usvg::Tree::from_data(&data, &opts).map_err(|e| e.to_string())?;
     let conv = svg2pdf::ConversionOptions::default();
     let page = svg2pdf::PageOptions::default();
     let pdf = svg2pdf::to_pdf(&tree, conv, page).map_err(|e| e.to_string())?;
-    let out = out_dir.join(format!("{}__svg2pdf.pdf", stem(input)));
+    let out = out_dir.join(format!("{}__svg2pdf_{variant}.pdf", stem(input)));
     std::fs::write(&out, pdf).map_err(|e| e.to_string())?;
     Ok(out)
 }
