@@ -1,0 +1,11 @@
+[package]
+name = "krilla_test"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+krilla = "0.7"
+krilla-svg = "0.7"
+usvg = "0.45"
+fontdb = "0.23"
+walkdir = "2"

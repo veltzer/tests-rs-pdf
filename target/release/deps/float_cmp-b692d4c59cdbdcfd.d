@@ -1,0 +1,11 @@
+/home/mark/git/veltzer/tests-rs-pdf/krilla_test/target/release/deps/float_cmp-b692d4c59cdbdcfd.d: /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/lib.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/macros.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/ulps.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/ulps_eq.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/eq.rs
+
+/home/mark/git/veltzer/tests-rs-pdf/krilla_test/target/release/deps/libfloat_cmp-b692d4c59cdbdcfd.rlib: /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/lib.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/macros.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/ulps.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/ulps_eq.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/eq.rs
+
+/home/mark/git/veltzer/tests-rs-pdf/krilla_test/target/release/deps/libfloat_cmp-b692d4c59cdbdcfd.rmeta: /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/lib.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/macros.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/ulps.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/ulps_eq.rs /home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/eq.rs
+
+/home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/lib.rs:
+/home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/macros.rs:
+/home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/ulps.rs:
+/home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/ulps_eq.rs:
+/home/mark/install/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/float-cmp-0.9.0/src/eq.rs:
