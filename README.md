@@ -1,4 +1,4 @@
-# tests-rs-pdf
+# test-rs-pdf
 
 A bake-off of Rust PDF engines, done to choose the engine for `rsslide`.
 
